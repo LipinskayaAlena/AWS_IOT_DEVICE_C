@@ -91,6 +91,62 @@ int where_look();
 void print_and_send(char* nameTopic);
 
 void iot_subscribe_callback_handler(AWS_IoT_Client *pClient, char *topicName, uint16_t topicNameLen,
+									IoT_Publish_Message_Params *params, void *pData) {
+	IOT_UNUSED(pData);
+	IOT_UNUSED(pClient);
+	//char myTopic[10] = "MyTopic";
+	//IOT_INFO("%s",topicName);
+		
+	//if(strcmp(topicName, myTopic) == 0) {
+	comm = (char*)params->payload;	
+	//}
+	IOT_INFO("%s",comm);
+	
+	if(strcmp(comm, GO)==0) {
+		command = 1;
+		IOT_INFO("%s", MESSAGE_GO);
+		
+	}
+	else if (strcmp(comm, LEFT)==0) {
+		command = 2;
+		IOT_INFO("%s", MESSAGE_TURN_LEFT);
+		
+	}
+	else if (strcmp(comm, RIGHT)==0) {
+		command = 3;
+		IOT_INFO("%s", MESSAGE_TURN_RIGHT);
+		
+	}
+	else if (strcmp(comm, STOP)==0) {
+		command = 4;
+		IOT_INFO("%s", MESSAGE_STOP);
+		
+	}
+	
+}
+
+void disconnectCallbackHandler(AWS_IoT_Client *pClient, void *data) {
+	IOT_WARN("MQTT Disconnect");
+	IoT_Error_t rc = FAILURE;
+
+	if(NULL == pClient) {
+		return;
+	}
+
+	IOT_UNUSED(data);
+
+	if(aws_iot_is_autoreconnect_enabled(pClient)) {
+		IOT_INFO("Auto Reconnect is enabled, Reconnecting attempt will start now");
+	} else {
+		IOT_WARN("Auto Reconnect not enabled. Starting manual reconnect...");
+		rc = aws_iot_mqtt_attempt_reconnect(pClient);
+		if(NETWORK_RECONNECTED == rc) {
+			IOT_WARN("Manual Reconnect Successful");
+		} else {
+			IOT_WARN("Manual Reconnect Failed - %d", rc);
+		}
+	}
+}
 									
 
 
