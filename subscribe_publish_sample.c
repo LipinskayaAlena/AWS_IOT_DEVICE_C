@@ -94,12 +94,9 @@ void iot_subscribe_callback_handler(AWS_IoT_Client *pClient, char *topicName, ui
 									IoT_Publish_Message_Params *params, void *pData) {
 	IOT_UNUSED(pData);
 	IOT_UNUSED(pClient);
-	//char myTopic[10] = "MyTopic";
-	//IOT_INFO("%s",topicName);
-		
-	//if(strcmp(topicName, myTopic) == 0) {
+	
 	comm = (char*)params->payload;	
-	//}
+	
 	IOT_INFO("%s",comm);
 	
 	if(strcmp(comm, GO)==0) {
@@ -147,9 +144,6 @@ void disconnectCallbackHandler(AWS_IoT_Client *pClient, void *data) {
 		}
 	}
 }
-									
-
-
 
 void parseInputArgsForConnectParams(int argc, char **argv) {
 	int opt;
@@ -265,11 +259,6 @@ int main(int argc, char **argv) {
 		IOT_ERROR("Error(%d) connecting to %s:%d", rc, mqttInitParams.pHostURL, mqttInitParams.port);
 		return rc;
 	}
-	/*
-	 * Enable Auto Reconnect functionality. Minimum and Maximum time of Exponential backoff are set in aws_iot_config.h
-	 *  #AWS_IOT_MQTT_MIN_RECONNECT_WAIT_INTERVAL
-	 *  #AWS_IOT_MQTT_MAX_RECONNECT_WAIT_INTERVAL
-	 */
 	rc = aws_iot_mqtt_autoreconnect_set_status(&client, true);
 	if(SUCCESS != rc) {
 		IOT_ERROR("Unable to set Auto Reconnect to true - %d", rc);
@@ -278,7 +267,7 @@ int main(int argc, char **argv) {
 
 	IOT_INFO("Subscribing...");
 	rc = aws_iot_mqtt_subscribe(&client, "MyTopic", 7, QOS0, iot_subscribe_callback_handler, NULL);
-	//aws_iot_mqtt_subscribe(&client, "MyTopic_2", 9, QOS0, iot_subscribe_callback_handler, NULL);
+	
 	if(SUCCESS != rc) {
 		IOT_ERROR("Error subscribing : %d ", rc);
 		return rc;
@@ -318,19 +307,14 @@ int main(int argc, char **argv) {
 			case 1:
 				if(!next_position()) 
 					break; 
-				//while(next_position() && command == 1 && command != 4) {
 					make_step();				
-					sleep(3);				
-				//} 
-				//command = 0;
+					sleep(3);	
 				break;
 			case 2:
 				turn_left();
 				sprintf(message, "(%d,%d)", current_i, current_j);
 				print_and_send("MyTopic_2");
 				IOT_INFO( "Current position (%d,%d)", current_i, current_j);
-				//sprintf(message, "I look on: (%d,%d)", next_i, next_j);
-				//print_and_send("MyTopic_2");
 				IOT_INFO( "I look on: (%d,%d)", next_i, next_j);
 				command = 0;
 				break;
@@ -339,12 +323,7 @@ int main(int argc, char **argv) {
 				sprintf(message, "(%d,%d)", current_i, current_j);
 				print_and_send("MyTopic_2");
 				IOT_INFO( "Current position: (%d,%d)", current_i, current_j);
-				//sleep(3);
-				
-				//sprintf(message, "I look on: (%d,%d)", next_i, next_j);
-				//print_and_send("MyTopic_2");
 				IOT_INFO( "I look on: (%d,%d)", next_i, next_j);
-				
 				command = 0;
 				break;
 			case 4:
@@ -400,6 +379,7 @@ void turn_left() {
 	}
 }
 
+
 void turn_right() {
 	switch(where_look()) {
 		case 1: // forward
@@ -432,6 +412,7 @@ int where_look() {
 		return 4;
 }
 
+
 void make_step() {
 	switch(where_look()) {
 		case 1: // forward
@@ -456,9 +437,6 @@ void make_step() {
 	sprintf(message, "(%d,%d)", current_i, current_j);
 	print_and_send("MyTopic_2");
 	IOT_INFO( "Current position: (%d,%d)", current_i, current_j);
-	
-	//sprintf(message, "I look on: (%d,%d)", next_i, next_j);
-	//print_and_send("MyTopic_2");
 	IOT_INFO( "I look on: (%d,%d)", next_i, next_j);
 	
 		
@@ -469,6 +447,3 @@ void print_and_send(char* nameTopic) {
 	p.payloadLen = strlen(message);
 	rc = aws_iot_mqtt_publish(&client, nameTopic, 9, &p);
 }
-
-
-
