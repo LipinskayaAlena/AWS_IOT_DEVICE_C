@@ -421,5 +421,16 @@ void turn_right() {
 	}
 }
 
+int where_look() {
+	if(current_i > next_i) // forward
+		return 1;
+	else if(current_j < next_j) // right
+		return 2;
+	else if(current_i < next_i) // down
+		return 3;
+	else if(current_j > next_j) // left
+		return 4;
+}
+
 
 
