@@ -464,5 +464,11 @@ void make_step() {
 		
 }
 
+void print_and_send(char* nameTopic) {
+	p.payload = (void*)message;
+	p.payloadLen = strlen(message);
+	rc = aws_iot_mqtt_publish(&client, nameTopic, 9, &p);
+}
+
 
 
