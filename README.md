@@ -26,9 +26,9 @@ API Documentation
 
 Robot field config file:
 
-Dimentions
+Dimention
 Field (1 - Wall)
-Dimension field
+
 5 6
 1 1 1 1 1 
 1 0 0 0 1
@@ -36,6 +36,7 @@ Dimension field
 1 0 0 0 1
 1 0 0 0 1
 1 1 1 1 1
+  
 #Running
 
 Build the project using Makefile(make)
