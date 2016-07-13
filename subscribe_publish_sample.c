@@ -379,5 +379,26 @@ bool next_position() {
 	return true;
 }
 
+void turn_left() {
+	switch(where_look()) {
+		case 1: // forward
+			next_i = current_i;
+			next_j = current_j - 1;
+			break;
+		case 2: // right
+			next_i = current_i - 1;
+			next_j = current_j;
+			break;
+		case 3: // down
+			next_i = current_i;
+			next_j = current_j + 1;
+			break;
+		case 4: // left
+			next_i = current_i + 1;
+			next_j = current_j;
+			break;
+	}
+}
+
 
 
