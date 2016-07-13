@@ -2,8 +2,10 @@
 
 Robot moving project. It connects to AWS IoT platform using MQTT
 
-#Prerequisities
 
+
+#Prerequisities
+Create a new AWS IoT Thing https://www.youtube.com/watch?v=hOc-iZcmv9E
 Download certificate authority CA file from Symantec
 Ensure you have created a thing through your AWS IoT Console with name matching the definition AWS_IOT_MY_THING_NAME in the aws_iot_config.h file
 Ensure the names of the cert files are the same as in the aws_iot_config.h file
@@ -21,6 +23,7 @@ Subscribe to a topic
 #Resources
 
 API Documentation
+http://aws-iot-device-sdk-java-docs.s3-website-us-east-1.amazonaws.com/
 
 #Config the field
 
@@ -28,7 +31,7 @@ Robot field config file:
 
 Dimention
 Field (1 - Wall)
-
+````
 5 6
 1 1 1 1 1 
 1 0 0 0 1
@@ -36,9 +39,9 @@ Field (1 - Wall)
 1 0 0 0 1
 1 0 0 0 1
 1 1 1 1 1
-  
+````  
 #Running
 
 Build the project using Makefile(make)
 Run the project
-./robot -f CONFIG_FIELD_FILE
+./robot
