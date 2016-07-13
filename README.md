@@ -1,4 +1,4 @@
-#AWS_IOT_ROBOT_C
+#AWS_IOT_DEVICE_C
 
 Robot moving project. It connects to AWS IoT platform using MQTT
 
