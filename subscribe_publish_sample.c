@@ -67,7 +67,7 @@ int last_command;
 
 int n, m;
 int **fields;
-
+char** field_steps;
 /**
  * @brief Default MQTT HOST URL is pulled from the aws_iot_config.h
  */
@@ -89,6 +89,7 @@ void turn_right();
 void make_step();
 int where_look();
 void print_and_send(char* nameTopic);
+void print_field_steps();
 
 void iot_subscribe_callback_handler(AWS_IoT_Client *pClient, char *topicName, uint16_t topicNameLen,
 									IoT_Publish_Message_Params *params, void *pData) {
@@ -188,12 +189,17 @@ void readFile()
 	fscanf(file, "%d", &n);
 	fscanf(file, "%d", &m);
 	fields = (int**) calloc(n, sizeof(int *));
+	field_steps = (char**)calloc(n, sizeof(char *));
 	for(int i = 0; i < n; i++) {
-		fields[i] = (int*) calloc(m, sizeof(int));	
+		fields[i] = (int*) calloc(m, sizeof(int));
+		field_steps[i] = (char*) calloc(m,sizeof(char));	
 	}
 	for(int i = 0; i < n; i++) {
 		for(int j = 0; j < m; j++) {
 			fscanf(file, "%d", &fields[i][j]);
+			if(fields[i][j] == 1)
+				field_steps[i][j] = '1';
+			else field_steps[i][j] = ' ';
 		}
 	}
 }
@@ -283,9 +289,12 @@ int main(int argc, char **argv) {
 	current_j = 1;
 	next_i = 0;
 	next_j = 1;
-	IOT_INFO("Current position: (%d,%d)", current_i, current_j);
-	IOT_INFO("I look on: (%d,%d)", next_i, next_j);
+	//IOT_INFO("Current position: (%d,%d)", current_i, current_j);
+	//IOT_INFO("I look on: (%d,%d)", next_i, next_j);
 	next_position();
+	field_steps[current_i][current_j] = 'x';
+	print_field_steps();
+	field_steps[current_i][current_j] = ' ';
 	
 	
 	bool first = true;
@@ -300,37 +309,47 @@ int main(int argc, char **argv) {
 			continue;
 		}
 		
-		
-		
 
 		switch(command) {
 			case 1:
 				if(!next_position()) 
 					break; 
-					make_step();				
+					make_step();
+					field_steps[current_i][current_j] = 'x';
+					print_field_steps();
+					field_steps[current_i][current_j] = ' ';
 					sleep(3);	
 				break;
 			case 2:
 				turn_left();
 				sprintf(message, "(%d,%d)", current_i, current_j);
 				print_and_send("MyTopic_2");
-				IOT_INFO( "Current position (%d,%d)", current_i, current_j);
-				IOT_INFO( "I look on: (%d,%d)", next_i, next_j);
+				field_steps[current_i][current_j] = 'x';
+				print_field_steps();
+				field_steps[current_i][current_j] = ' ';
+				//IOT_INFO( "Current position (%d,%d)", current_i, current_j);
+				//IOT_INFO( "I look on: (%d,%d)", next_i, next_j);
 				command = 0;
 				break;
 			case 3:
 				turn_right();
 				sprintf(message, "(%d,%d)", current_i, current_j);
 				print_and_send("MyTopic_2");
-				IOT_INFO( "Current position: (%d,%d)", current_i, current_j);
-				IOT_INFO( "I look on: (%d,%d)", next_i, next_j);
+				field_steps[current_i][current_j] = 'x';
+				print_field_steps();
+				field_steps[current_i][current_j] = ' ';
+				//IOT_INFO( "Current position: (%d,%d)", current_i, current_j);
+				//IOT_INFO( "I look on: (%d,%d)", next_i, next_j);
 				command = 0;
 				break;
 			case 4:
 				sprintf(message, "(%d,%d)", current_i, current_j);
 				print_and_send("MyTopic_2");
-				IOT_INFO( "Current position: (%d,%d)", current_i, current_j);
-				IOT_INFO( "I look on: (%d,%d)", next_i, next_j);
+				field_steps[current_i][current_j] = 'x';
+				print_field_steps();
+				field_steps[current_i][current_j] = ' ';
+				//IOT_INFO( "Current position: (%d,%d)", current_i, current_j);
+				//IOT_INFO( "I look on: (%d,%d)", next_i, next_j);
 				command = 0;	
 				break;
 		}
@@ -446,4 +465,13 @@ void print_and_send(char* nameTopic) {
 	p.payload = (void*)message;
 	p.payloadLen = strlen(message);
 	rc = aws_iot_mqtt_publish(&client, nameTopic, 9, &p);
+}
+
+void print_field_steps() {
+	for(int i = 0; i < n; i++) {
+		for(int j = 0; j < m; j++) {
+			printf("%c ", field_steps[i][j]);
+		}
+		printf("\n");	
+	}
 }
