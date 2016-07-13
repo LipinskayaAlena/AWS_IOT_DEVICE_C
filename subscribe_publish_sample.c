@@ -432,5 +432,37 @@ int where_look() {
 		return 4;
 }
 
+void make_step() {
+	switch(where_look()) {
+		case 1: // forward
+			current_i--;
+			next_i--;
+			break;
+		case 2: // right
+			current_j++;
+			next_j++;
+			break;
+		case 3: // down
+			current_i++;
+			next_i++;
+			break;
+		case 4: // left
+			current_j--;
+			next_j--;
+			break;
+	}
+	
+	
+	sprintf(message, "(%d,%d)", current_i, current_j);
+	print_and_send("MyTopic_2");
+	IOT_INFO( "Current position: (%d,%d)", current_i, current_j);
+	
+	//sprintf(message, "I look on: (%d,%d)", next_i, next_j);
+	//print_and_send("MyTopic_2");
+	IOT_INFO( "I look on: (%d,%d)", next_i, next_j);
+	
+		
+}
+
 
 
