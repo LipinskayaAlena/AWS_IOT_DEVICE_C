@@ -367,6 +367,17 @@ int main(int argc, char **argv) {
 	return rc;
 }
 
+bool next_position() {
+	if(fields[next_i][next_j] == 1) {
+		if(command != 0) {
+			sprintf(message, "FORWARD FALL!");
+			print_and_send("MyTopic_2"); }
+		IOT_INFO("%s", "FORWARD FALL!");
+		command = 0;	
+		return false;
+	}
+	return true;
+}
 
 
 
