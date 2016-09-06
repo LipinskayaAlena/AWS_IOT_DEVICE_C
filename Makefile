@@ -12,24 +12,23 @@ APP_INCLUDE_DIRS += -I $(APP_DIR)
 APP_NAME = robot
 APP_SRC_FILES = $(APP_NAME).c
 
-#IoT client directory
-IOT_CLIENT_DIR = ../../..
+#IoT client directory IOT_C
 
-PLATFORM_DIR = $(IOT_CLIENT_DIR)/platform/linux/mbedtls
-PLATFORM_COMMON_DIR = $(IOT_CLIENT_DIR)/platform/linux/common
+PLATFORM_DIR = platform/linux/mbedtls
+PLATFORM_COMMON_DIR = platform/linux/common
 
-IOT_INCLUDE_DIRS += -I $(IOT_CLIENT_DIR)/include
-IOT_INCLUDE_DIRS += -I $(IOT_CLIENT_DIR)/external_libs/jsmn
+IOT_INCLUDE_DIRS += -I include
+IOT_INCLUDE_DIRS += -I external_libs/jsmn
 IOT_INCLUDE_DIRS += -I $(PLATFORM_COMMON_DIR)
 IOT_INCLUDE_DIRS += -I $(PLATFORM_DIR)
 
-IOT_SRC_FILES += $(shell find $(IOT_CLIENT_DIR)/src/ -name '*.c')
-IOT_SRC_FILES += $(shell find $(IOT_CLIENT_DIR)/external_libs/jsmn -name '*.c')
+IOT_SRC_FILES += $(shell find src/ -name '*.c')
+IOT_SRC_FILES += $(shell find external_libs/jsmn -name '*.c')
 IOT_SRC_FILES += $(shell find $(PLATFORM_DIR)/ -name '*.c')
 IOT_SRC_FILES += $(shell find $(PLATFORM_COMMON_DIR)/ -name '*.c')
 
 #TLS - mbedtls
-MBEDTLS_DIR = $(IOT_CLIENT_DIR)/external_libs/mbedTLS
+MBEDTLS_DIR = external_libs/mbedTLS
 TLS_LIB_DIR = $(MBEDTLS_DIR)/library
 TLS_INCLUDE_DIR = -I $(MBEDTLS_DIR)/include
 EXTERNAL_LIBS += -L$(TLS_LIB_DIR)

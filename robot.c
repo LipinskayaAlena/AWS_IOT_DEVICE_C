@@ -43,7 +43,7 @@
 
 IoT_Error_t rc = FAILURE;
 
-char certDirectory[PATH_MAX + 1] = "../../../certs";
+char certDirectory[PATH_MAX + 1] = "certs";
 
 char MESSAGE_GO[] = "I'M GOING";
 char MESSAGE_TURN_LEFT[] = "I'M TURN ON THE LEFT";
@@ -186,16 +186,17 @@ void parseInputArgsForConnectParams(int argc, char **argv) {
 
 void readFile() 
 {
+	int i, j;
 	fscanf(file, "%d", &n);
 	fscanf(file, "%d", &m);
 	fields = (int**) calloc(n, sizeof(int *));
 	field_steps = (char**)calloc(n, sizeof(char *));
-	for(int i = 0; i < n; i++) {
+	for(i = 0; i < n; i++) {
 		fields[i] = (int*) calloc(m, sizeof(int));
 		field_steps[i] = (char*) calloc(m,sizeof(char));	
 	}
-	for(int i = 0; i < n; i++) {
-		for(int j = 0; j < m; j++) {
+	for(i = 0; i < n; i++) {
+		for(j = 0; j < m; j++) {
 			fscanf(file, "%d", &fields[i][j]);
 			if(fields[i][j] == 1)
 				field_steps[i][j] = '1';
@@ -468,8 +469,9 @@ void print_and_send(char* nameTopic) {
 }
 
 void print_field_steps() {
-	for(int i = 0; i < n; i++) {
-		for(int j = 0; j < m; j++) {
+	int i, j;
+	for(i = 0; i < n; i++) {
+		for(j = 0; j < m; j++) {
 			printf("%c ", field_steps[i][j]);
 		}
 		printf("\n");	
